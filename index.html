@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Styleframe by DeepSpace2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Styleframe</h1>
+      <h2 class="project-tagline">A library that wraps pandas and openpyxl and allows easy styling of dataframes in excel</h2>
+      <a href="https://github.com/DeepSpace2/StyleFrame" class="btn">View on GitHub</a>
+      <a href="https://github.com/DeepSpace2/StyleFrame/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/DeepSpace2/StyleFrame/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation:</h1>
+
+<pre><code>pip install styleframe
+</code></pre>
+
+<h1>
+<a id="some-usage-examples" class="anchor" href="#some-usage-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Some usage examples</h1>
+
+<p>StyleFrame constructor supports all the ways you are used to initiate pandas dataframe.
+An existing dataframe, a dictionary or a list of dictionaries:</p>
+
+<pre><code>from StyleFrame import StyleFrame
+
+sf = StyleFrame({'col_a': range(100)})
+</code></pre>
+
+<p>Applying a style to rows that meet a condition using pandas selecting syntax.
+In this example all the cells in the <code>col_a</code> column with the value &gt; 50 will have
+blue background and a bold, sized 10 font:</p>
+
+<pre><code>sf.apply_style_by_indexes(indexes_to_style=sf[sf['col_a'] &gt; 50],
+                          cols_to_style=['col_a'], bg_color='blue', bold=True, font_size=10)
+</code></pre>
+
+<p>Creating ExcelWriter used to save the excel:</p>
+
+<pre><code>ew = StyleFrame.ExcelWriter(r'C:\my_excel.xlsx')
+sf.to_excel(ew)
+ew.save()
+</code></pre>
+
+<p>It is also possible to style a whole column or columns, and decide whether to style the headers or not:</p>
+
+<pre><code>sf.apply_column_style(cols_to_style=['a'], bg_color='green', style_header=True)
+</code></pre>
+
+<h1>
+<a id="api-documentation" class="anchor" href="#api-documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>API documentation</h1>
+
+<p>Given that <code>sf = StyleFrame(...)</code> :</p>
+
+<h2>
+<a id="styling-by-indexes" class="anchor" href="#styling-by-indexes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Styling by indexes</h2>
+
+<pre><code>sf.apply_style_by_indexes(indexes_to_style=None, cols_to_style=None, bg_color=colors.white,
+                          bold=False, font_size=12, font_color=colors.black,
+                          number_format=number_formats.general, protection=False)
+</code></pre>
+
+<p>Applies a certain style to the provided indexes in the dataframe to the provided columns.
+Parameters:</p>
+
+<pre><code>indexes_to_style: indexes to apply the style to
+cols_to_style: the columns to apply the style to, if not provided all the columns will be styled
+bg_color: the cell's background color to use
+bold: bold or not
+font_size: the font size
+font_color: the font color
+number_format: Excel's number format to use
+protection: to protect the cell from changes or not
+</code></pre>
+
+<h2>
+<a id="styling-by-columns" class="anchor" href="#styling-by-columns" aria-hidden="true"><span class="octicon octicon-link"></span></a>Styling by columns</h2>
+
+<pre><code>sf.apply_column_style(cols_to_style=None, bg_color=colors.white, bold=False, font_size=12,
+                      font_color=colors.black, style_header=False,
+                      number_format=number_formats.general, protection=False)
+</code></pre>
+
+<p>Apply a style to a whole column.
+Parameters:</p>
+
+<pre><code>cols_to_style: the columns to apply the style to
+bg_color: the cell's background color to use
+bold: bold or not
+font_size: the font size
+font_color: the font color
+style_header: style the header or not
+number_format: Excel's number format to use
+protection: to protect the column from changes or not
+</code></pre>
+
+<h2>
+<a id="styling-headers-only" class="anchor" href="#styling-headers-only" aria-hidden="true"><span class="octicon octicon-link"></span></a>Styling headers only</h2>
+
+<pre><code>sf.apply_headers_style(bg_color=colors.white, bold=True, font_size=12, font_color=colors.black,
+                       number_format=number_formats.general, protection=False)
+</code></pre>
+
+<p>Apply style to the headers only.
+Parameters:</p>
+
+<pre><code>    bg_color: the cell's background color to use
+    bold: bold or not
+    font_size: the font size
+    font_color: the font color
+    number_format: Excel's number format to use
+    protection: to protect the column from changes or not
+</code></pre>
+
+<h2>
+<a id="renaming-columns" class="anchor" href="#renaming-columns" aria-hidden="true"><span class="octicon octicon-link"></span></a>Renaming columns</h2>
+
+<pre><code>    sf.rename(columns=None, inplace=False)
+</code></pre>
+
+<p>Rename the underlying dataframe's columns.
+Parameters:</p>
+
+<pre><code>    columns: a dictionary, old_col_name -&gt; new_col_name
+    inplace: whether to rename the columns inplace or return a new StyleFrame object
+    return: None if inplace=True, StyleFrame if inplace=False
+</code></pre>
+
+<h2>
+<a id="setting-columns-width" class="anchor" href="#setting-columns-width" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting columns width</h2>
+
+<pre><code>sf.set_column_width(columns, width)
+</code></pre>
+
+<p>Set the width of the given columns
+Parameters:</p>
+
+<pre><code>    columns: a single or a list/tuple of column name, index or letter to change their width
+    width: numeric positive value of the new width
+
+
+set_column_width_dict(self, col_width_dict)
+</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>    col_width_dict: a dictionary from tuples of columns to the desired width
+</code></pre>
+
+<h2>
+<a id="setting-rows-height" class="anchor" href="#setting-rows-height" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting rows height</h2>
+
+<pre><code>sf.set_row_height(rows, height)
+</code></pre>
+
+<p>Set the height of the given rows.
+Parameters:</p>
+
+<pre><code>    rows: a single row index, list of indexes or tuple of indexes to change their height
+    height: numeric positive value of the new height
+
+
+sf.set_column_width_dict(self, col_width_dict)
+</code></pre>
+
+<p>Parameters:</p>
+
+<pre><code>sf.set_row_height_dict: a dictionary from tuples of rows to the desired height
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/DeepSpace2/StyleFrame">Styleframe</a> is maintained by <a href="https://github.com/DeepSpace2">DeepSpace2</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
